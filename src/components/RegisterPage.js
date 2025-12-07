@@ -1,58 +1,90 @@
 // src/components/RegisterPage.js
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { registerUser } from "../api/client";
+import { useNavigate, Link } from "react-router-dom";
+import { registerUser, loginUser } from "../api/client";
+import "../styles/style.css";
 
-export default function RegisterPage() {
+function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
+  const [repeat, setRepeat] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
+    setError("");
+
+    if (password !== repeat) {
+      setError("Пароли не совпадают");
+      return;
+    }
+
+    setLoading(true);
     try {
+      // создаём пользователя с ролью user
       await registerUser(email, password);
-      // после регистрации отправляем на страницу входа
-      navigate("/login");
-    } catch (err) {
-      setError(err.message || "Ошибка регистрации");
+      // можно сразу залогинить
+      await loginUser(email, password);
+      navigate("/intro", { replace: true });
+    } catch (e) {
+      setError(e.message || "Ошибка регистрации");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div style={{ padding: 24 }}>
-      <h2>Регистрация</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email:&nbsp;</label>
+    <main className="content">
+      <h1>Регистрация</h1>
+      <form onSubmit={handleSubmit} className="auth-form">
+        <label>
+          Email
           <input
             type="email"
             value={email}
+            autoComplete="username"
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-        </div>
-        <div style={{ marginTop: 8 }}>
-          <label>Пароль:&nbsp;</label>
+        </label>
+
+        <label>
+          Пароль
           <input
             type="password"
             value={password}
+            autoComplete="new-password"
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-        </div>
-        {error && (
-          <p style={{ color: "red", marginTop: 8 }}>
-            {error}
-          </p>
-        )}
-        <button type="submit" style={{ marginTop: 12 }}>
-          Зарегистрироваться
+        </label>
+
+        <label>
+          Повторите пароль
+          <input
+            type="password"
+            value={repeat}
+            autoComplete="new-password"
+            onChange={(e) => setRepeat(e.target.value)}
+            required
+          />
+        </label>
+
+        {error && <div className="error-text">{error}</div>}
+
+        <button type="submit" disabled={loading}>
+          {loading ? "Регистрируем..." : "Зарегистрироваться"}
         </button>
       </form>
-    </div>
+
+      <p style={{ marginTop: "1rem" }}>
+        Уже есть аккаунт? <Link to="/login">Войти</Link>
+      </p>
+    </main>
   );
 }
+
+export default RegisterPage;

@@ -1,23 +1,43 @@
+// src/hooks/usePageTracking.js
 import { useEffect, useRef } from "react";
-import { sendTimeSpent } from "../api/client";
+import { sendTimeSpent, getToken } from "../api/client";
 
-export function usePageTracking(pageId) {
+// ЕДИНАЯ карта, которую ты синхронизируешь с таблицей pages
+const PAGE_IDS = {
+  intro:       1,
+  conclusion:  2,
+  main:        3,  // твой MainPanel (process/table/list)
+  posts:       4,
+  api:         5,
+  image:       6,  // тут ставишь фактический id из SELECT id,name
+  // stats:    7,  если захочешь отдельный id
+};
+
+export default function usePageTracking(pageKey) {
   const startRef = useRef(null);
 
   useEffect(() => {
-    // компонент смонтировался — запоминаем время старта
-    startRef.current = performance.now();
+    const token = getToken();
+    const pageId = PAGE_IDS[pageKey];
 
-    // функция очистки: вызывается при размонтировании компонента (уход со страницы)
+    console.log("[TRACKING INIT]", { pageKey, pageId, token });
+
+    if (!token || !pageId) return;
+
+    startRef.current = Date.now();
+
     return () => {
-      const end = performance.now();
-      const seconds = (end - startRef.current) / 1000;
+      const tokenAgain = getToken();
+      if (!tokenAgain || !startRef.current) return;
 
-      if (seconds < 0.1) return; // чтобы не слать совсем микроскопическое время
+      const seconds = Math.floor((Date.now() - startRef.current) / 1000);
+      console.log("[TRACKING DONE]", { pageKey, pageId, seconds });
 
-      sendTimeSpent(pageId, seconds).catch((err) => {
-        console.error("Ошибка отправки времени:", err);
-      });
+      if (seconds > 0) {
+        sendTimeSpent(pageId, seconds).catch((err) =>
+          console.error("Ошибка KPI:", err)
+        );
+      }
     };
-  }, [pageId]); 
+  }, [pageKey]);
 }

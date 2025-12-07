@@ -1,24 +1,29 @@
 // src/components/RequireAuth.js
 import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import { getToken, parseToken } from "../api/client";
+import { parseToken, clearToken } from "../api/client";
 
-export default function RequireAuth({ children, role }) {
+function RequireAuth({ children, role }) {
   const location = useLocation();
-  const token = getToken();
+  const payload = parseToken();
 
-  if (!token) {
-    // нет токена -> на /login
+  // нет токена
+  if (!payload) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  if (role) {
-    const payload = parseToken();
-    if (!payload || payload.role !== role) {
-      // роль не подходит -> можно отправить на главную
-      return <Navigate to="/" replace />;
-    }
+  // токен протух
+  if (payload.exp && payload.exp * 1000 < Date.now()) {
+    clearToken();
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  // проверка роли (для админских маршрутов)
+  if (role && payload.role !== role) {
+    return <Navigate to="/intro" replace />;
   }
 
   return children;
 }
+
+export default RequireAuth;

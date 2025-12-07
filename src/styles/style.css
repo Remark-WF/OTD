@@ -114,6 +114,13 @@ table tbody tr:nth-child(even) {
   padding: 20px;
 }
 
+.article-source {
+  font-size: 0.9rem;
+  color: #555;
+  margin-top: -6px;
+  margin-bottom: 6px;
+}
+
 .method-switcher {
   margin-bottom: 15px;
 }
@@ -368,3 +375,309 @@ table tbody tr:nth-child(even) {
   border-radius: 8px;
   font-size: 0.95rem;
 }
+/* =========================
+   📊 Страница статистики
+   ========================= */
+
+.stats-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  padding: 24px 28px;
+  max-width: 900px;
+  margin: 0 auto;          /* <-- центрируем по горизонтали */
+  box-sizing: border-box;
+}
+
+.stats-card h2 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  color: #2c3e50;
+}
+
+.stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+
+.stats-table th,
+.stats-table td {
+  border: 1px solid #ccc;
+  padding: 8px 10px;
+  text-align: left;
+}
+
+.stats-table thead {
+  background-color: #f3f4f6;
+}
+
+.stats-table tbody tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+/* =========================
+   🔐 Auth (Login / Register)
+   ========================= */
+
+.auth-form {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 24px 28px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  box-sizing: border-box;
+}
+
+.auth-form label {
+  display: block;
+  margin-bottom: 14px;
+  font-size: 0.95rem;
+  color: #2c3e50;
+}
+
+.auth-form input[type="email"],
+.auth-form input[type="password"] {
+  width: 100%;
+  padding: 8px 10px;
+  margin-top: 4px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.auth-form input[type="email"]:focus,
+.auth-form input[type="password"]:focus {
+  outline: none;
+  border-color: #1abc9c;
+  box-shadow: 0 0 0 2px rgba(26, 188, 156, 0.2);
+}
+
+.auth-form button[type="submit"] {
+  width: 100%;
+  margin-top: 6px;
+  padding: 10px 0;
+  border: none;
+  border-radius: 10px;
+  background-color: #1abc9c;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.auth-form button[type="submit"]:hover {
+  background-color: #16a085;
+}
+
+.error-text {
+  margin: 6px 0 10px;
+  padding: 6px 10px;
+  background: #fef2f2;
+  color: #b91c1c;
+  border-left: 3px solid #fecaca;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+/* =========================
+   👤 Нижний блок в sidebar
+   ========================= */
+
+.sidebar-footer {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.user-info {
+  color: #ecf0f1;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.sidebar-footer button {
+  width: 60%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #e74c3c;
+  background: transparent;
+  color: #e74c3c;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.sidebar-footer button:hover {
+  background: #e74c3c;
+  color: #ffffff;
+}
+/* =========================
+   🔎 Поиск по странице
+   ========================= */
+
+.page-search {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  align-items: center;
+}
+
+.page-search input[type="text"] {
+  flex: 1;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.page-search input[type="text"]:focus {
+  outline: none;
+  border-color: #1abc9c;
+  box-shadow: 0 0 0 2px rgba(26, 188, 156, 0.2);
+}
+
+.page-search button {
+  padding: 7px 14px;
+  border-radius: 8px;
+  border: none;
+  background-color: #1abc9c;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.3s;
+}
+
+.page-search button:hover {
+  background-color: #16a085;
+}
+
+/* =========================
+   🌐 Глобальный поиск в sidebar
+   ========================= */
+
+.global-search {
+  padding: 0 1rem 1rem;
+  box-sizing: border-box;
+}
+
+.global-search form {
+  display: flex;
+  gap: 6px;
+}
+
+.global-search input[type="text"] {
+  flex: 1;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid #34495e;
+  font-size: 0.85rem;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+.global-search input[type="text"]:focus {
+  outline: none;
+  border-color: #1abc9c;
+  box-shadow: 0 0 0 2px rgba(26, 188, 156, 0.3);
+}
+
+.global-search button {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: none;
+  background: #1abc9c;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.global-search button:hover {
+  background: #16a085;
+}
+
+.global-search-results {
+  margin-top: 6px;
+  background: #ecf0f1;
+  border-radius: 10px;
+  padding: 6px;
+  max-height: 180px;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.global-search-item {
+  padding: 4px 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.global-search-item:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.global-search-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.global-search-snippet {
+  font-size: 0.75rem;
+  color: #34495e;
+}
+
+.global-search-empty {
+  font-size: 0.8rem;
+  color: #555;
+  padding: 4px 6px;
+}
+
+
+/* Блок авторизации в сайдбаре */
+.sidebar-auth-block {
+  margin-top: 2rem;
+}
+
+/* Кнопка выхода стилизована как ссылки в сайдбаре */
+.sidebar-logout-btn {
+  display: inline-block;
+  width: 60%;
+  padding: 0.5rem 1rem;
+  background: #34495e;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font: inherit;
+  text-align: center;
+  transition: background 0.3s;
+}
+
+.sidebar-logout-btn:hover {
+  background: #c0392b;
+}
+
+/* GIF на странице введения */
+.intro-gif {
+  display: block;
+  width: 100%;           /* по ширине области контента */
+  max-width: 1800px;     /* можно оставить, если хочешь ограничение */
+  margin-top: 2rem;      /* отступ сверху от текста */
+  margin-bottom: 2rem;   /* отступ снизу */
+  /* убрали auto, чтобы не центрировалась */
+  border-radius: 16px;
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.15);
+  object-fit: cover;
+}
+

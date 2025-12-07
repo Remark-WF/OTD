@@ -1,13 +1,17 @@
+// src/components/sidebar.js
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { parseToken, clearToken } from "../api/client";
+import GlobalSearch from "./GlobalSearch";      // ← ДОБАВИЛИ
 import "../styles/style.css";
 
 function Sidebar() {
   const payload = parseToken();
+  const isAuth = !!payload;
   const isAdmin = payload?.role === "admin";
-  const isLoggedIn = !!payload;
   const navigate = useNavigate();
+
+  const linkClass = ({ isActive }) => (isActive ? "active" : "");
 
   const handleLogout = () => {
     clearToken();
@@ -16,70 +20,87 @@ function Sidebar() {
 
   return (
     <nav className="sidebar">
-      <ul>
-        {!isLoggedIn && (
-          <li>
-            <NavLink to="/login" className={({ isActive }) => (isActive ? "active" : "")}>
-              Вход
-            </NavLink>
-          </li>
-        )}
+      {/* 🔍 Глобальный поиск вверху сайдбара */}
+      <GlobalSearch />
 
+      <ul>
+        {/* Информационные страницы */}
         <li>
-          <NavLink to="/intro" className={({ isActive }) => (isActive ? "active" : "")}>
+          <NavLink to="/intro" className={linkClass}>
             Введение
           </NavLink>
         </li>
         <li>
-          <NavLink to="/process" className={({ isActive }) => (isActive ? "active" : "")}>
+          <NavLink to="/process" className={linkClass}>
             Описание
           </NavLink>
         </li>
         <li>
-          <NavLink to="/table" className={({ isActive }) => (isActive ? "active" : "")}>
+          <NavLink to="/table" className={linkClass}>
             Таблица
           </NavLink>
         </li>
         <li>
-          <NavLink to="/list" className={({ isActive }) => (isActive ? "active" : "")}>
+          <NavLink to="/list" className={linkClass}>
             Список
           </NavLink>
         </li>
         <li>
-          <NavLink to="/posts" className={({ isActive }) => (isActive ? "active" : "")}>
-            Посты
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/api" className={({ isActive }) => (isActive ? "active" : "")}>
-            API
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/conclusion" className={({ isActive }) => (isActive ? "active" : "")}>
+          <NavLink to="/conclusion" className={linkClass}>
             Заключение
           </NavLink>
         </li>
+
+        {/* Функциональные страницы (RequireAuth на маршрутах) */}
         <li>
-          <NavLink to="/image" className={({ isActive }) => (isActive ? "active" : "")}>
+          <NavLink to="/posts" className={linkClass}>
+            Статьи
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/image" className={linkClass}>
             Инвертер
           </NavLink>
         </li>
+        <li>
+          <NavLink to="/api" className={linkClass}>
+            API
+          </NavLink>
+        </li>
 
+        {/* Статистика только для admin */}
         {isAdmin && (
           <li>
-            <NavLink to="/stats" className={({ isActive }) => (isActive ? "active" : "")}>
+            <NavLink to="/stats" className={linkClass}>
               Статистика страниц
             </NavLink>
           </li>
         )}
 
-        {isLoggedIn && (
-          <li>
-            <button type="button" onClick={handleLogout} className="logout-button">
-              Выход
+        {/* Блок аутентификации */}
+        {isAuth ? (
+          <li className="sidebar-auth-block">
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="sidebar-logout-btn"
+            >
+              Выйти ({payload.email})
             </button>
           </li>
+        ) : (
+          <>
+            <li className="sidebar-auth-block">
+              <NavLink to="/login" className={linkClass}>
+                Вход
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/register" className={linkClass}>
+                Регистрация
+              </NavLink>
+            </li>
+          </>
         )}
       </ul>
     </nav>

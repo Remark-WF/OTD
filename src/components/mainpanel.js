@@ -1,13 +1,17 @@
 import React from "react";
 import "../styles/style.css";
-import { usePageTracking } from "../hooks/usePageTracking";
+import usePageTracking from "../hooks/usePageTracking";
+import SearchBar from "./SearchBar";
+import useRouteHighlight from "../hooks/useRouteHighlight";
 
 function MainPanel() {
-
-  usePageTracking(3);
+  usePageTracking("main");
+  useRouteHighlight();
 
   return (
     <main className="content">
+      <SearchBar />
+
       <h1 id="intro">Контроль качества маркировки на производстве</h1>
       <p>
         Контроль качества маркировки — это важный этап в производственном процессе,

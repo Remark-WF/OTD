@@ -1,59 +1,78 @@
 // src/components/LoginPage.js
 import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { loginUser } from "../api/client";
+import { useNavigate, useLocation, Link } from "react-router-dom";
+import { loginUser, parseToken } from "../api/client";
+import "../styles/style.css";
 
-export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
+function LoginPage() {
+  const [email, setEmail] = useState("admin@example.com");
+  const [password, setPassword] = useState("admin");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from?.pathname || "/"; // куда вернуть после логина
+
+  // если уже залогинен – просто отправим на /intro
+  const already = parseToken();
+  if (already) {
+    navigate("/intro", { replace: true });
+  }
+
+  const from = location.state?.from?.pathname || "/intro";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
+    setError("");
+    setLoading(true);
     try {
       await loginUser(email, password);
       navigate(from, { replace: true });
-    } catch (err) {
-      setError(err.message || "Ошибка входа");
+    } catch (e) {
+      setError(e.message || "Ошибка входа");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div style={{ padding: 24 }}>
-      <h2>Вход</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email:&nbsp;</label>
+    <main className="content">
+      <h1>Вход</h1>
+      <form onSubmit={handleSubmit} className="auth-form">
+        <label>
+          Email
           <input
             type="email"
             value={email}
+            autoComplete="username"
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-        </div>
-        <div style={{ marginTop: 8 }}>
-          <label>Пароль:&nbsp;</label>
+        </label>
+
+        <label>
+          Пароль
           <input
             type="password"
             value={password}
+            autoComplete="current-password"
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-        </div>
-        {error && (
-          <p style={{ color: "red", marginTop: 8 }}>
-            {error}
-          </p>
-        )}
-        <button type="submit" style={{ marginTop: 12 }}>
-          Войти
+        </label>
+
+        {error && <div className="error-text">{error}</div>}
+
+        <button type="submit" disabled={loading}>
+          {loading ? "Входим..." : "Войти"}
         </button>
       </form>
-    </div>
+
+      <p style={{ marginTop: "1rem" }}>
+        Нет аккаунта? <Link to="/register">Регистрация</Link>
+      </p>
+    </main>
   );
 }
+
+export default LoginPage;

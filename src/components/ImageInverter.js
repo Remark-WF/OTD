@@ -1,10 +1,14 @@
 // src/components/ImageInverter.jsx
 import React, { useState } from "react";
 import { invertImage } from "../api/client";
-import { usePageTracking } from "../hooks/usePageTracking";
+import usePageTracking from "../hooks/usePageTracking";
+import SearchBar from "./SearchBar";
+import useRouteHighlight from "../hooks/useRouteHighlight";
 
 export default function ImageInverter() {
-  usePageTracking(6);
+  usePageTracking("image");
+  useRouteHighlight();
+
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [resultUrl, setResultUrl] = useState(null);
@@ -35,12 +39,18 @@ export default function ImageInverter() {
   };
 
   return (
-    <div className="content">
+    <main className="content">
+      <SearchBar />
+
       <div className="image-inverter">
         <h2>Инвертирование изображения (FastAPI)</h2>
 
         <form onSubmit={onSubmit}>
-          <input type="file" accept="image/*" onChange={onFileChange} />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={onFileChange}
+          />
           <button type="submit" disabled={!file || loading}>
             {loading ? "Обработка..." : "Инвертировать"}
           </button>
@@ -65,6 +75,6 @@ export default function ImageInverter() {
           )}
         </div>
       </div>
-    </div>
+    </main>
   );
 }

@@ -1,56 +1,60 @@
+// src/components/StatsPage.js
 import React, { useEffect, useState } from "react";
 import { getKpi } from "../api/client";
+import usePageTracking from "../hooks/usePageTracking";
+import useRouteHighlight from "../hooks/useRouteHighlight";
+import SearchBar from "./SearchBar";
+import "../styles/style.css";
 
-function formatTime(seconds) {
-  // Красивое форматирование
-  if (seconds < 60) return `${seconds.toFixed(1)} сек`;
-  const m = Math.floor(seconds / 60);
-  const s = Math.floor(seconds % 60);
-  return `${m} мин ${s} сек`;
-}
+function StatsPage() {
+  usePageTracking("stats");
+  useRouteHighlight();
 
-export default function StatsPage() {
-  const [stats, setStats] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [rows, setRows] = useState([]);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    async function load() {
-      try {
-        const data = await getKpi();
-        setStats(data);
-      } catch (e) {
-        console.error("Ошибка загрузки KPI", e);
-      } finally {
-        setLoading(false);
-      }
-    }
-    load();
+    getKpi()
+      .then(setRows)
+      .catch((e) => setError(e.message || "Ошибка загрузки KPI"));
   }, []);
 
-  if (loading) return <div>Загрузка статистики...</div>;
-
   return (
-    <div className="content">
-      <h1>Статистика посещений</h1>
+    <main className="content">
+      <SearchBar />
 
-      <table border="1" cellPadding="8">
-        <thead>
-          <tr>
-            <th>Страница</th>
-            <th>Посещения</th>
-            <th>Общее время</th>
-          </tr>
-        </thead>
-        <tbody>
-          {stats.map((s) => (
-            <tr key={s.page_id}>
-              <td>{s.page_name}</td>
-              <td>{s.visits}</td>
-              <td>{formatTime(s.total_time)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+      <div className="stats-card">
+        <h2 className="hover-head">Статистика посещений страниц</h2>
+
+        {error && <p className="error-text">Ошибка: {error}</p>}
+
+        {rows.length === 0 ? (
+          <p>Пока нет данных по KPI.</p>
+        ) : (
+          <table className="stats-table">
+            <thead>
+              <tr>
+                <th>ID страницы</th>
+                <th>Страница</th>
+                <th>Посещений</th>
+                <th>Общее время (сек)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r) => (
+                <tr key={r.page_id}>
+                  <td>{r.page_id}</td>
+                  <td>{r.page_name}</td>
+                  <td>{r.visits}</td>
+                  <td>{Math.round(r.total_time)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </main>
   );
 }
+
+export default StatsPage;
