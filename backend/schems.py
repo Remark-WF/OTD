@@ -46,3 +46,10 @@ class UserOut(UserBase):
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
+
+class ArticleOut(BaseModel):
+    id: int
+    title: str
+    url: str
+    source: str | None = None
+    description: str | None = None
